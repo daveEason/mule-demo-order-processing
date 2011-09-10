@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+                    http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/3.2/mule-http.xsd
+                    http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/3.2/mule-cxf.xsd
+                    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.2/mule.xsd ">
+    <spring:beans></spring:beans>
+    <flow name="order_management">
+        <http:inbound-endpoint host="localhost" port="1081" path="orders" exchange-pattern="request-response">
+            <not-filter>
+                <wildcard-filter pattern="/favicon.ico"/>
+            </not-filter>
+        </http:inbound-endpoint>
+        <cxf:jaxws-service serviceClass="com.mulesoft.demo.orderprocessing.ProcessOrderImpl"/>
+        <component class="com.mulesoft.demo.orderprocessing.ProcessOrderImpl"/>
+        <choice>
+            <when expression="totalListPrice &gt; 1000" evaluator="ognl">
+                <processor-chain>
+                    <component class="com.mulesoft.demo.orderprocessing.ThirtyPercentDiscount"/>
+                </processor-chain>
+            </when>
+            <when expression="totalListPrice &gt; 500" evaluator="ognl">
+                <processor-chain>
+                    <component class="com.mulesoft.demo.orderprocessing.TwentyPercentDiscount"/>
+                </processor-chain>
+            </when>
+            <when expression="totalListPrice &lt; 500" evaluator="ognl">
+                <processor-chain>
+                    <component class="com.mulesoft.demo.orderprocessing.TenPercentDiscount"/>
+                </processor-chain>
+            </when>
+        </choice>
+    </flow>
+</mule>
