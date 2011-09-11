@@ -4,6 +4,7 @@
       xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf"
       xmlns:spring="http://www.springframework.org/schema/beans"
       xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
                     http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/3.2/mule-http.xsd
@@ -13,32 +14,39 @@
                     http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/3.2/mule-tracking-ee.xsd">
 
     <spring:beans></spring:beans>
-    <flow name="order_management" tracking:enable-default-events="true">
+
+    <tracking:custom-event-template name="discountDetails">
+        <tracking:meta-data key="Total List Price" value="#[ognl:totalListPrice]" />
+        <tracking:meta-data key="Total Discounted Price" value="#[ognl:totalDiscountedPrice]" />
+        <tracking:meta-data key="Discount Percentage" value="#[ognl:discountPercentage]" />
+    </tracking:custom-event-template>
+
+    <flow name="order_management" doc:name="Order Processing" tracking:enable-default-events="true">
         <http:inbound-endpoint host="localhost" port="1081" path="orders" exchange-pattern="request-response">
             <not-filter>
                 <wildcard-filter pattern="/favicon.ico"/>
             </not-filter>
         </http:inbound-endpoint>
-        <logger tracking:enable-default-events="true" />
         <cxf:jaxws-service serviceClass="com.mulesoft.demo.orderprocessing.ProcessOrderImpl"/>
-        <component class="com.mulesoft.demo.orderprocessing.ProcessOrderImpl"/>
-        <tracking:custom-event event-name="OrderReceived">
-          <tracking:meta-data key="OrderId" value="#[ognl:orderId]" />
-        </tracking:custom-event>
+        <tracking:transaction id="#[ognl:orderId]"/>
+        <component class="com.mulesoft.demo.orderprocessing.ProcessOrderImpl" doc:name="Create Order Summary"/>
         <choice>
             <when expression="totalListPrice &gt; 1000" evaluator="ognl">
                 <processor-chain>
-                    <component class="com.mulesoft.demo.orderprocessing.ThirtyPercentDiscount"/>
+                    <component class="com.mulesoft.demo.orderprocessing.ThirtyPercentDiscount" doc:name="Apply discount 30 percent"/>
+                    <tracking:custom-event event-name="Order discount details" inherits="discountDetails"/>
                 </processor-chain>
             </when>
             <when expression="totalListPrice &gt; 500" evaluator="ognl">
                 <processor-chain>
-                    <component class="com.mulesoft.demo.orderprocessing.TwentyPercentDiscount"/>
+                    <component class="com.mulesoft.demo.orderprocessing.TwentyPercentDiscount" doc:name="Apply discount 20 percent"/>
+                    <tracking:custom-event event-name="Order discount details" inherits="discountDetails"/>
                 </processor-chain>
             </when>
             <when expression="totalListPrice &lt; 500" evaluator="ognl">
                 <processor-chain>
-                    <component class="com.mulesoft.demo.orderprocessing.TenPercentDiscount"/>
+                    <component class="com.mulesoft.demo.orderprocessing.TenPercentDiscount" doc:name="Apply discount 10 percent"/>
+                    <tracking:custom-event event-name="Order discount details" inherits="discountDetails"/>
                 </processor-chain>
             </when>
         </choice>
