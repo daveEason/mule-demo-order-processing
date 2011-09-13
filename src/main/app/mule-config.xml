@@ -15,6 +15,16 @@
 
     <spring:beans></spring:beans>
 
+    <tracking:custom-event-template name="orderDetails">
+        <tracking:meta-data key="Order Id" value="#[ognl:orderId]" />
+        <tracking:meta-data key="Customer Name" value="#[ognl:customer.firstName] #[ognl:customer.lastName]" />
+        <tracking:meta-data key="Location" value="#[ognl:customer.city], #[ognl:customer.state]" />
+        <tracking:meta-data key="Product Name" value="#[ognl:items[0].name]" />
+        <tracking:meta-data key="Product Id" value="#[ognl:items[0].productId]" />
+        <tracking:meta-data key="Quantity" value="#[ognl:items[0].quantity]" />
+        <tracking:meta-data key="List Price" value="#[ognl:items[0].listPrice]" />
+    </tracking:custom-event-template>
+
     <tracking:custom-event-template name="discountDetails">
         <tracking:meta-data key="Total List Price" value="#[ognl:totalListPrice]" />
         <tracking:meta-data key="Total Discounted Price" value="#[ognl:totalDiscountedPrice]" />
@@ -27,9 +37,15 @@
                 <wildcard-filter pattern="/favicon.ico" tracking:enable-default-events="false"/>
             </not-filter>
         </http:inbound-endpoint>
+
         <cxf:jaxws-service serviceClass="com.mulesoft.demo.orderprocessing.ProcessOrderImpl" doc:name="Process SOAP Order request"/>
         <tracking:transaction id="PO#[ognl:orderId]" doc:name="Register Order Id"/>
-        <component class="com.mulesoft.demo.orderprocessing.ProcessOrderImpl" doc:name="Create Order Summary"/>
+
+        <processor-chain>
+            <tracking:custom-event event-name="Order Details" inherits="orderDetails"/>
+            <component class="com.mulesoft.demo.orderprocessing.ProcessOrderImpl" doc:name="Create Order Summary"/>
+        </processor-chain>
+
         <choice>
             <when expression="totalListPrice &gt; 1000" evaluator="ognl">
                 <processor-chain>

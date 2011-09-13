@@ -36,30 +36,30 @@ public class MuleDemoOrderProcessingTestCase extends FunctionalTestCase
         item = new OrderItem("SONY-USB-WR-001","Sony USB Wireless Router", (float) 80.00,5);
         itemList.clear();
         itemList.add(item);
-        order = new Order("0001223",customer,itemList);
+        order = new Order("0001232",customer,itemList);
 
         MuleMessage result = client.send("cxf:http://localhost:1081/orders?method=processOrder", order, null);
         assertNotNull(result);
         assertNull(result.getExceptionPayload());
         assertFalse(result.getPayload() instanceof NullPayload);
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><discountPercentage>10.0</discountPercentage><itemCount>5</itemCount><orderId>0001223</orderId><totalDiscountedPrice>360.0</totalDiscountedPrice><totalListPrice>400.0</totalListPrice></orderSummary>", result.getPayloadAsString());
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><discountPercentage>10.0</discountPercentage><itemCount>5</itemCount><orderId>0001232</orderId><totalDiscountedPrice>360.0</totalDiscountedPrice><totalListPrice>400.0</totalListPrice></orderSummary>", result.getPayloadAsString());
     }
 
     public void testTwentyPercentDiscount() throws Exception
     {
         MuleClient client = new MuleClient(muleContext);
 
-        customer = new OrderPerson("Joe","Mack","New York","NY");
+        customer = new OrderPerson("Peter","Piper","Atlanta","GA");
         item = new OrderItem("SONY-USB-WR-001","Sony USB Wireless Router", (float) 80.00,10);
         itemList.clear();
         itemList.add(item);
-        order = new Order("0001224",customer,itemList);
+        order = new Order("0001233",customer,itemList);
 
         MuleMessage result = client.send("cxf:http://localhost:1081/orders?method=processOrder", order, null);
         assertNotNull(result);
         assertNull(result.getExceptionPayload());
         assertFalse(result.getPayload() instanceof NullPayload);
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><discountPercentage>20.0</discountPercentage><itemCount>10</itemCount><orderId>0001224</orderId><totalDiscountedPrice>640.0</totalDiscountedPrice><totalListPrice>800.0</totalListPrice></orderSummary>", result.getPayloadAsString());
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><discountPercentage>20.0</discountPercentage><itemCount>10</itemCount><orderId>0001233</orderId><totalDiscountedPrice>640.0</totalDiscountedPrice><totalListPrice>800.0</totalListPrice></orderSummary>", result.getPayloadAsString());
     }
 
 
@@ -67,17 +67,17 @@ public class MuleDemoOrderProcessingTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient(muleContext);
 
-        customer = new OrderPerson("Joe","Mack","New York","NY");
+        customer = new OrderPerson("Micheal","Magee","Chicago","IL");
         item = new OrderItem("SONY-USB-WR-001","Sony USB Wireless Router", (float) 80.00,20);
         itemList.clear();
         itemList.add(item);
-        order = new Order("0001225",customer,itemList);
+        order = new Order("0001234",customer,itemList);
 
         MuleMessage result = client.send("cxf:http://localhost:1081/orders?method=processOrder", order, null);
         assertNotNull(result);
         assertNull(result.getExceptionPayload());
         assertFalse(result.getPayload() instanceof NullPayload);
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><discountPercentage>30.0</discountPercentage><itemCount>20</itemCount><orderId>0001225</orderId><totalDiscountedPrice>1120.0</totalDiscountedPrice><totalListPrice>1600.0</totalListPrice></orderSummary>", result.getPayloadAsString());
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><discountPercentage>30.0</discountPercentage><itemCount>20</itemCount><orderId>0001234</orderId><totalDiscountedPrice>1120.0</totalDiscountedPrice><totalListPrice>1600.0</totalListPrice></orderSummary>", result.getPayloadAsString());
     }
 
 
