@@ -17,7 +17,7 @@ public class ThirtyPercentDiscount {
 	 */
 	public OrderSummary calculateDiscount(OrderSummary summary) {
 
-		summary.setdiscountPercentage((float)30);
+		summary.setDiscountPercentage((float)30);
 		summary.calculateDiscountedPrice();
 
 		return summary;

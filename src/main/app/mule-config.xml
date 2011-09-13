@@ -22,13 +22,13 @@
     </tracking:custom-event-template>
 
     <flow name="order_management" doc:name="Order Processing" tracking:enable-default-events="true">
-        <http:inbound-endpoint host="localhost" port="1081" path="orders" exchange-pattern="request-response">
-            <not-filter>
-                <wildcard-filter pattern="/favicon.ico"/>
+        <http:inbound-endpoint host="localhost" port="1081" path="orders" exchange-pattern="request-response" tracking:enable-default-events="false">
+            <not-filter tracking:enable-default-events="false">
+                <wildcard-filter pattern="/favicon.ico" tracking:enable-default-events="false"/>
             </not-filter>
         </http:inbound-endpoint>
-        <cxf:jaxws-service serviceClass="com.mulesoft.demo.orderprocessing.ProcessOrderImpl"/>
-        <tracking:transaction id="#[ognl:orderId]"/>
+        <cxf:jaxws-service serviceClass="com.mulesoft.demo.orderprocessing.ProcessOrderImpl" doc:name="Process SOAP Order request"/>
+        <tracking:transaction id="PO#[ognl:orderId]" doc:name="Register Order Id"/>
         <component class="com.mulesoft.demo.orderprocessing.ProcessOrderImpl" doc:name="Create Order Summary"/>
         <choice>
             <when expression="totalListPrice &gt; 1000" evaluator="ognl">

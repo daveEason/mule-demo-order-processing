@@ -42,7 +42,7 @@ public class MuleDemoOrderProcessingTestCase extends FunctionalTestCase
         assertNotNull(result);
         assertNull(result.getExceptionPayload());
         assertFalse(result.getPayload() instanceof NullPayload);
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><itemCount>5</itemCount><orderId>0001223</orderId><totalDiscountedPrice>360.0</totalDiscountedPrice><totalListPrice>400.0</totalListPrice><discountPercentage>10.0</discountPercentage></orderSummary>", result.getPayloadAsString());
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><discountPercentage>10.0</discountPercentage><itemCount>5</itemCount><orderId>0001223</orderId><totalDiscountedPrice>360.0</totalDiscountedPrice><totalListPrice>400.0</totalListPrice></orderSummary>", result.getPayloadAsString());
     }
 
     public void testTwentyPercentDiscount() throws Exception
@@ -53,13 +53,13 @@ public class MuleDemoOrderProcessingTestCase extends FunctionalTestCase
         item = new OrderItem("SONY-USB-WR-001","Sony USB Wireless Router", (float) 80.00,10);
         itemList.clear();
         itemList.add(item);
-        order = new Order("0001223",customer,itemList);
+        order = new Order("0001224",customer,itemList);
 
         MuleMessage result = client.send("cxf:http://localhost:1081/orders?method=processOrder", order, null);
         assertNotNull(result);
         assertNull(result.getExceptionPayload());
         assertFalse(result.getPayload() instanceof NullPayload);
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><itemCount>10</itemCount><orderId>0001223</orderId><totalDiscountedPrice>640.0</totalDiscountedPrice><totalListPrice>800.0</totalListPrice><discountPercentage>20.0</discountPercentage></orderSummary>", result.getPayloadAsString());
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><discountPercentage>20.0</discountPercentage><itemCount>10</itemCount><orderId>0001224</orderId><totalDiscountedPrice>640.0</totalDiscountedPrice><totalListPrice>800.0</totalListPrice></orderSummary>", result.getPayloadAsString());
     }
 
 
@@ -71,13 +71,13 @@ public class MuleDemoOrderProcessingTestCase extends FunctionalTestCase
         item = new OrderItem("SONY-USB-WR-001","Sony USB Wireless Router", (float) 80.00,20);
         itemList.clear();
         itemList.add(item);
-        order = new Order("0001223",customer,itemList);
+        order = new Order("0001225",customer,itemList);
 
         MuleMessage result = client.send("cxf:http://localhost:1081/orders?method=processOrder", order, null);
         assertNotNull(result);
         assertNull(result.getExceptionPayload());
         assertFalse(result.getPayload() instanceof NullPayload);
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><itemCount>20</itemCount><orderId>0001223</orderId><totalDiscountedPrice>1120.0</totalDiscountedPrice><totalListPrice>1600.0</totalListPrice><discountPercentage>30.0</discountPercentage></orderSummary>", result.getPayloadAsString());
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><orderSummary><discountPercentage>30.0</discountPercentage><itemCount>20</itemCount><orderId>0001225</orderId><totalDiscountedPrice>1120.0</totalDiscountedPrice><totalListPrice>1600.0</totalListPrice></orderSummary>", result.getPayloadAsString());
     }
 
 

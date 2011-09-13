@@ -59,11 +59,11 @@ public class OrderSummary {
 		this.totalDiscountedPrice = totalDiscountedPrice;
 	}
 
-	public float getdiscountPercentage() {
+	public float getDiscountPercentage() {
 		return discountPercentage;
 	}
 
-	public void setdiscountPercentage(float discount) {
+	public void setDiscountPercentage(float discount) {
 		this.discountPercentage = discount;
 	}
 
