@@ -7,12 +7,12 @@
     <groupId>com.mulesoft.demo</groupId>
     <artifactId>mule-demo-order-processing</artifactId>
     <packaging>mule</packaging>
-    <name>Mule Muledemoexceptionhandling Application</name>
+    <name>Mule Mule Demo Order Processing Application</name>
     <version>1.0-SNAPSHOT</version>
-    <description>Simple Mule application to illustrate the use of exception handling strategys</description>
+    <description>Simple Mule application to illustrate the use of Business Event Analyzer tracking events</description>
 
     <properties>
-        <mule.version>3.2.0</mule.version>
+        <mule.version>3.2.2</mule.version>
         <!-- Tools properties -->
         <eclipsePluginVersion>2.5</eclipsePluginVersion>
         <vmtype>org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType</vmtype>
